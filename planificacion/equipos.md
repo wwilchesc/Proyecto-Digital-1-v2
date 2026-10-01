@@ -1,83 +1,60 @@
 # Equipos y responsabilidades
 
-> **Pendiente:** reemplazar `Integrante A/B/C` y `@usuario` por los nombres y usuarios de GitHub reales. Los códigos (`G1-A`, `G2-B`…) son los que usa el [cronograma](cronograma.md).
+La división sigue la del [diagrama de flujo general](../diagramas/README.md#3-diagrama-de-flujo-general): un grupo por módulo, identificado con una letra (A–L).
 
-Reglas:
+> **Pendiente:** completar la columna *Integrantes* con los nombres y usuarios de GitHub. Dentro de cada grupo, cada tarea del [cronograma](cronograma.md) se asigna a una persona en su *issue*.
 
-- Cada grupo es dueño de sus periféricos **completos**: especificación, ASM, RTL, testbench, driver en C y prueba en la FPGA.
-- Cada integrante tiene tareas propias. La responsabilidad del grupo no reemplaza la individual.
-- Todos los integrantes escriben código RTL o C y participan en la verificación.
-
----
-
-## G1 — Integración del SoC, UART y firmware de integración
-
-El grupo del bus: sin su trabajo nadie puede probar en la FPGA.
-
-| Código | Integrante | GitHub | Tareas |
+| Grupo | Módulo | Carpeta | Integrantes |
 |---|---|---|---|
-| G1-A | Integrante A | @usuario | Decodificador de direcciones (`cs0`–`cs9`), mux de `d_out` y top `SOC.v`; revisión de los PR de integración |
-| G1-B | Integrante B | @usuario | Periférico `uart` (RTL, testbench, driver `uart_putc/getc`) |
-| G1-C | Integrante C | @usuario | Flujo de compilación del firmware (`firmware.hex` en BRAM), programa de autoprueba de arranque que llama a las pruebas de todos los periféricos e informa por UART |
+| **A** | BRAM, bus y SoC: memoria de arranque, decodificador de direcciones, mux de lectura y top `SOC.v` | `soc` (pendiente) | |
+| **B** | UART: diagnóstico y log de errores | [`cores/uart`](../cores/uart/README.md) | |
+| **C** | SPI-RAM: memoria de trabajo, carga del juego | [`cores/spiram`](../cores/spiram/README.md) | |
+| **D** | SPI-Flash: assets, íconos y binarios de los juegos | [`cores/spi_flash`](../cores/spi_flash/README.md) | |
+| **E** | Teclado PS/2 | [`cores/ps2_keyboard`](../cores/ps2_keyboard/README.md) | |
+| **F** | Mouse PS/2 | [`cores/ps2_mouse`](../cores/ps2_mouse/README.md) | |
+| **G** | Control NES | [`cores/nes_ctrl`](../cores/nes_ctrl/README.md) | |
+| **H** | I2C: EEPROM de puntajes y comprobación de elementos al encender | [`cores/i2c`](../cores/i2c/README.md) | |
+| **I** | I2S: audio | [`cores/i2s`](../cores/i2s/README.md) | |
+| **J** | Display: panel LED y framebuffer | [`cores/display`](../cores/display/README.md) | |
+| **K** | Software de juegos: menú, modo demo, hot-plug, juegos y puntajes | [`firmware`](../firmware/README.md) | |
+| **L** | Pantallas RGB laterales e indicadores LED de puerto | [`cores/indicadores`](../cores/indicadores/README.md) | |
 
-## G2 — Memoria externa SPI
+## Qué entrega cada grupo
 
-| Código | Integrante | GitHub | Tareas |
-|---|---|---|---|
-| G2-A | Integrante A | @usuario | Maestro SPI común + periférico `spiram` |
-| G2-B | Integrante B | @usuario | Periférico `spi_flash` (reutiliza el maestro SPI) |
-| G2-C | Integrante C | @usuario | Modelos SPI de RAM y Flash para los testbench; drivers C y prueba de memoria en arranque |
+Cada grupo de periférico (B a J y L) es dueño de su módulo completo:
 
-## G3 — Entradas PS/2
+1. Especificación: función, protocolo, pines y registros CSR (`cores/<p>/README.md`).
+2. Diagrama de flujo y ASM (`cores/<p>/diagramas/`).
+3. RTL y testbench con `make sim` (`cores/<p>/rtl/`).
+4. Driver en C y programa de prueba (`cores/<p>/firmware/`).
+5. Prueba en la FPGA dentro del SoC compartido.
 
-| Código | Integrante | GitHub | Tareas |
-|---|---|---|---|
-| G3-A | Integrante A | @usuario | Receptor PS/2 común + periférico `ps2_keyboard` con FIFO |
-| G3-B | Integrante B | @usuario | Periférico `ps2_mouse` (envío host→dispositivo de `0xF4`, paquetes de 3 bytes) |
-| G3-C | Integrante C | @usuario | Testbench con modelo de teclado y mouse; drivers C (`kbd_get_key`, `mouse_poll`) |
-
-## G4 — Control NES y pantalla
-
-| Código | Integrante | GitHub | Tareas |
-|---|---|---|---|
-| G4-A | Integrante A | @usuario | Periférico `nes_ctrl` (LATCH/CLK/DATA, dos jugadores) |
-| G4-B | Integrante B | @usuario | Testbench con modelo del 4021; driver C `nes_read` |
-| G4-C | Integrante C | @usuario | Integración del driver de panel / framebuffer suministrado; programa de prueba de pantalla |
-
-## G5 — I2C y puntajes
-
-| Código | Integrante | GitHub | Tareas |
-|---|---|---|---|
-| G5-A | Integrante A | @usuario | Periférico `i2c` maestro (START, STOP, WRITE, READ, ACK) |
-| G5-B | Integrante B | @usuario | Modelo de EEPROM 24LC256 para el testbench; verificación de casos de error (NACK) |
-| G5-C | Integrante C | @usuario | Driver C (`eeprom_read/write`) y tabla de puntajes altos (`score_save/load`) |
-
-## G6 — Audio I2S
-
-| Código | Integrante | GitHub | Tareas |
-|---|---|---|---|
-| G6-A | Integrante A | @usuario | Periférico `i2s` (BCLK, LRCLK, serializador) |
-| G6-B | Integrante B | @usuario | FIFO de muestras y generador de tono; testbench |
-| G6-C | Integrante C | @usuario | Driver C y efectos de sonido del juego (`sound_beep`, `sound_effect`) |
-
----
+El Grupo A entrega el bus y el SoC que permiten probar todo en la FPGA. El Grupo K entrega el software que une todos los módulos.
 
 ## Dependencias entre grupos
 
 ```mermaid
 flowchart LR
-    G1[G1: bus, decodificador, UART] --> G2[G2: SPI]
-    G1 --> G3[G3: PS/2]
-    G1 --> G4[G4: NES y pantalla]
-    G1 --> G5[G5: I2C]
-    G1 --> G6[G6: I2S]
-    G3 --> J[Firmware del juego]
-    G4 --> J
-    G5 --> J
-    G6 --> J
-    G2 --> J
+    A[A: BRAM y bus] --> B[B: UART]
+    A --> C[C: SPI-RAM]
+    A --> D[D: SPI-Flash]
+    A --> E[E: Teclado]
+    A --> F[F: Mouse]
+    A --> G[G: NES]
+    A --> H[H: I2C]
+    A --> I[I: I2S]
+    A --> J[J: Display]
+    A --> L[L: Indicadores]
+    E & F & G -- comando común --> K[K: Software de juegos]
+    C & D -- memoria y assets --> K
+    K -- qué mostrar --> J
+    K -- sonidos --> I
+    K -- puntajes --> H
+    K -- estado de puertos y errores --> L
+    K -- log --> B
 ```
 
 - Todos pueden **simular** su periférico sin esperar a nadie: el testbench maneja el bus directamente.
-- Para **probar en la FPGA** hace falta el decodificador y el top del G1 (tarea `T-G1-03`) y la UART (`T-G1-10`), que sirve para ver resultados.
-- G2 comparte el maestro SPI entre sus dos periféricos, y G3 el receptor PS/2 entre teclado y mouse.
+- Para **probar en la FPGA** hace falta el bus y el top del Grupo A (tarea `T-A-03`) y la UART del Grupo B (`T-B-06`), que sirve para ver resultados.
+- E, F y G deben acordar con K el formato del **comando común** (A/B/Start/Select/Pad).
+- J y K deben acordar el formato de color y el tamaño del framebuffer.

@@ -4,8 +4,7 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 3 — PS/2 (teclado y mouse) |
-| **Responsable del RTL** | G3-A (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo E — Teclado PS/2 (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x430000 – 0x43FFFF` |
 | **Archivo RTL** | `cores/ps2_keyboard/rtl/perip_ps2kbd.v` |
 
@@ -37,7 +36,7 @@ module perip_ps2kbd (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x430000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|
@@ -49,6 +48,18 @@ Direcciones relativas a `0x430000`. Todos los registros son de 32 bits.
 
 - Diagramas de bloques y de flujo: [`diagramas/`](diagramas/README.md)
 - Estados previstos: `IDLE`, `DATA` (contador 0–7), `PARITY`, `STOP`. Datapath: sincronizador de 2 flip-flops, filtro del reloj PS/2, registro de desplazamiento, FIFO de 8–16 posiciones.
+
+## Teclas relevantes (comando común)
+
+Solo estas teclas se traducen al comando común que usa el software de juegos (Grupo K); las demás se ignoran.
+
+| Tecla | Comando |
+|---|---|
+| `W` / `A` / `S` / `D` | Arriba / Izquierda / Abajo / Derecha |
+| `J` | A |
+| `K` | B |
+| `Enter` | Start |
+| `Espacio` | Select |
 
 ## Plan de verificación (checkpoint 3)
 

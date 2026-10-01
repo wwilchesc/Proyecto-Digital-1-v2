@@ -4,8 +4,7 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 2 — Memoria externa SPI |
-| **Responsable del RTL** | G2-B (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo D — SPI-Flash (assets, íconos y binarios) (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x420000 – 0x42FFFF` |
 | **Archivo RTL** | `cores/spi_flash/rtl/perip_spiflash.v` |
 
@@ -17,7 +16,7 @@ Leer datos no volátiles del juego (gráficos, niveles, sonidos) almacenados en 
 
 SPI modo 0. Chip de referencia: familia W25Qxx. Comandos: `0x03` READ, `0x06` WRITE ENABLE, `0x02` PAGE PROGRAM, `0x20` SECTOR ERASE, `0x05` READ STATUS, `0x9F` JEDEC ID.
 
-**Pines externos:** `spi_sck`, `spi_mosi`, `spi_miso`, `flash_cs_n` (se comparte el bus SPI con la SPI-RAM si la placa lo exige; a definir con el Grupo 1).
+**Pines externos:** `spi_sck`, `spi_mosi`, `spi_miso`, `flash_cs_n` (se comparte el bus SPI con la SPI-RAM si la placa lo exige; a definir con los Grupos A y C).
 
 ## Interfaz con el bus (igual para todos los periféricos)
 
@@ -37,7 +36,7 @@ module perip_spiflash (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x420000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|
@@ -51,7 +50,7 @@ Direcciones relativas a `0x420000`. Todos los registros son de 32 bits.
 ## Diseño
 
 - Diagramas de bloques y de flujo: [`diagramas/`](diagramas/README.md)
-- Estados previstos: `IDLE`, `CMD`, `ADDR`, `DATA`, `DONE`. Puede reutilizar el maestro SPI del Grupo 2 (misma base de RTL que la SPI-RAM).
+- Estados previstos: `IDLE`, `CMD`, `ADDR`, `DATA`, `DONE`. Puede reutilizar el maestro SPI del Grupo C (misma base de RTL que la SPI-RAM).
 
 ## Plan de verificación (checkpoint 3)
 

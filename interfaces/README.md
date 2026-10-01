@@ -32,6 +32,6 @@ Tabla en el [README principal](../README.md#4-mapa-de-memoria) y en C en [`memor
 
 ## 4. Pines y restricciones
 
-- La asignación de pines de la FPGA y el archivo de restricciones los consolida G1 a medida que cada grupo define sus pines externos.
+- La asignación de pines de la FPGA y el archivo de restricciones los consolida el Grupo A a medida que cada grupo define sus pines externos.
 - Las entradas asíncronas (PS/2, NES, UART RX, I2C SDA) pasan por un **sincronizador de 2 flip-flops** antes de usarse.
 - Las líneas de colector abierto (PS/2, I2C) se manejan como `assign pin = oe ? 1'b0 : 1'bz;`.

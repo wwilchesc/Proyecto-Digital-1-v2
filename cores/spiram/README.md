@@ -4,8 +4,7 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 2 — Memoria externa SPI |
-| **Responsable del RTL** | G2-A (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo C — SPI-RAM (memoria de trabajo) (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x410000 – 0x41FFFF` |
 | **Archivo RTL** | `cores/spiram/rtl/perip_spiram.v` |
 
@@ -37,7 +36,7 @@ module perip_spiram (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x410000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|

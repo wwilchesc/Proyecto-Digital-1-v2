@@ -12,26 +12,28 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
+
+> El diagrama de flujo corresponde a la hoja **«I2S»** de [`diagramas/Diagrama_de_Flujo.drawio`](../../../diagramas/Diagrama_de_Flujo.drawio).
 
 ```mermaid
 flowchart TD
-    A[Reset] --> B{¿ENABLE?}
-    B -- No --> B
-    B -- Sí --> C{¿MODE?}
-    C -- FIFO --> D{¿FIFO vacía?}
-    D -- Sí --> E[Enviar 0, UNDERRUN=1]
-    D -- No --> F[Tomar muestra de la FIFO]
-    C -- Tono --> G[Generar muestra cuadrada]
-    E --> H[Serializar canal izquierdo, LRCLK=0]
-    F --> H
-    G --> H
-    H --> I[Serializar canal derecho, LRCLK=1]
-    I --> B
+    A([Inicio]) --> B([Leer archivo .wav]) --> C([Leer metadatos])
+    C --> D{¿Es mono?}
+    D -- Sí --> F([Leer datos de audio])
+    D -- No --> E([Bloqueo de gestión de estéreo]) --> F
+    F --> G([Ignorar uno de los canales])
+    G --> H([Esperar un pulso de BCLK])
+    H --> I([Cambiar de estado LRCLK])
+    I --> J(["Enviar 8 bits al DAC (1 bit por cada pulso de BCLK)"])
+    J --> K([Reproducir audio])
+    K --> L{¿El archivo terminó?}
+    L -- No --> F
+    L -- Sí --> M([Finalizar reproducción]) --> N([Fin])
 ```
 
 ## Máquina de estados
 
-Contador de bits (0–31) que genera BCLK/LRCLK; registro de desplazamiento de 32 bits; FIFO de muestras; generador de tono opcional.
+Contador de bits (0–7) que genera BCLK/LRCLK, registro de desplazamiento de 8 bits y FIFO de muestras.
 
 El diagrama ASM detallado se agrega aquí en el checkpoint 2.

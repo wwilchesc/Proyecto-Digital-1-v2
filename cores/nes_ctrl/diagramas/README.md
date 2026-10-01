@@ -12,24 +12,26 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
+
+> El diagrama de flujo corresponde a la hoja **«Controlador NES»** de [`diagramas/Diagrama_de_Flujo.drawio`](../../../diagramas/Diagrama_de_Flujo.drawio).
 
 ```mermaid
 flowchart TD
-    A[Reset] --> B{¿ENABLE?}
-    B -- No --> B
-    B -- Sí --> C[Esperar POLL_DIV ciclos]
-    C --> D[Pulso LATCH]
-    D --> E[Leer bit de DATA]
-    E --> F[Pulso CLK]
-    F --> G{¿8 bits leídos?}
-    G -- No --> E
-    G -- Sí --> H[Invertir y guardar en BUTTONS_P1/P2]
-    H --> B
+    A([Leer mando NES]) --> B[LATCH = HIGH] --> C[Esperar 12 µs] --> D[LATCH = LOW]
+    D --> E[Leer pin DATA] --> F["Guardar en registro_temp[0]"] --> G[i = 1]
+    G --> H{i ≤ 7}
+    H -- Sí --> I[CLOCK = HIGH] --> J[Esperar 6 µs] --> K[CLOCK = LOW] --> L[Esperar 6 µs]
+    L --> M[Leer pin DATA] --> N["Guardar en registro_temp[i]"] --> O[i = i + 1] --> H
+    H -- No --> P["Invertir bits: byte = ~registro_temp"]
+    P --> Q[Escribir byte en MMIO 0x450000]
+    Q --> R["'Dato listo' en 0x450008"]
+    R --> S([Byte listo para la CPU])
+    S --> T[Esperar temporizador de 16.6 ms, 60 Hz] --> A
 ```
 
 ## Máquina de estados
 
-`IDLE`, `LATCH`, `READ`, `SHIFT`, `DONE`. Datapath: divisor de tiempo, contador de bits (0–7), dos registros de desplazamiento.
+`IDLE`, `LATCH` (12 µs), `READ`, `CLK_HIGH` (6 µs), `CLK_LOW` (6 µs), `STORE`, `WAIT_60HZ`. Datapath: contador de tiempo, contador de bits `i` (0–7), registro `registro_temp` de 8 bits.
 
 El diagrama ASM detallado se agrega aquí en el checkpoint 2.

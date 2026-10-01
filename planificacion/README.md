@@ -4,7 +4,7 @@ Archivos de esta carpeta:
 
 | Archivo | Contenido |
 |---|---|
-| [`equipos.md`](equipos.md) | Grupos, integrantes y tareas de cada uno |
+| [`equipos.md`](equipos.md) | Grupos A–L, integrantes y dependencias |
 | [`cronograma.md`](cronograma.md) | Línea base del plan: tareas con responsable, fechas, dependencias, estado y evidencia |
 | `README.md` (este) | Cómo configurar y usar GitHub Projects |
 
@@ -17,7 +17,7 @@ Usamos **un solo GitHub Project** asociado a este repositorio general. Los *issu
 | Campo | Tipo |
 |---|---|
 | Estado | Selección: Pendiente, En desarrollo, Bloqueada, Terminada |
-| Equipo | Selección: G1, G2, G3, G4, G5, G6 |
+| Equipo | Selección: A, B, C, D, E, F, G, H, I, J, K, L |
 | Responsable | Persona (*Assignees*) |
 | Fecha de inicio | Fecha |
 | Fecha de entrega | Fecha |
@@ -31,7 +31,7 @@ Usamos **un solo GitHub Project** asociado a este repositorio general. Los *issu
 1. **Seguimiento**: tabla agrupada por *Equipo* y ordenada por *Estado*.
 2. **Cronograma**: *roadmap* con *Fecha de inicio* y *Fecha de entrega*.
 
-### Pasos para crearlo (una sola vez, lo hace G1)
+### Pasos para crearlo (una sola vez, lo hace el Grupo A)
 
 1. En GitHub: tu perfil → **Projects → New project → Table**. Nombre: `Consola FPGA — Digital 1`.
 2. Agregar los campos de la tabla anterior con **+ New field**.
@@ -41,7 +41,7 @@ Usamos **un solo GitHub Project** asociado a este repositorio general. Los *issu
 
 ## Ciclo de una tarea
 
-1. **Crear** el issue con el formulario **Tarea del proyecto Digital 1** ([`tarea.yml`](../.github/ISSUE_TEMPLATE/tarea.yml)). Usar el ID del cronograma en el título, por ejemplo `[Digital 1] T-G3-07 RTL del teclado PS/2`.
+1. **Crear** el issue con el formulario **Tarea del proyecto Digital 1** ([`tarea.yml`](../.github/ISSUE_TEMPLATE/tarea.yml)). Usar el ID del cronograma en el título, por ejemplo `[Digital 1] T-E-03 RTL del teclado PS/2`.
 2. **Asignar** a la persona responsable. Cada issue tiene un solo responsable.
 3. **Agregar** el issue al Project y llenar fechas, dependencias, equipo y checkpoint.
 4. **Trabajar** en una rama `feat/<periferico>-<tema>`. Los commits van a nombre de quien hizo el trabajo.

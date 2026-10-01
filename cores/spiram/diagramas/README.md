@@ -12,7 +12,7 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
 
 ```mermaid
 flowchart TD

@@ -12,23 +12,23 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
+
+> El diagrama de flujo corresponde a la hoja **«E Keyboard»** de [`diagramas/Diagrama_de_Flujo.drawio`](../../../diagramas/Diagrama_de_Flujo.drawio).
 
 ```mermaid
 flowchart TD
-    A[Reset] --> B[Sincronizar ps2_clk y detectar flanco de bajada]
-    B --> C{¿Bit de inicio = 0?}
+    A([Conexión]) --> B([Espera de un cambio de estado])
+    B --> C{¿Dato diferente de cero?}
     C -- No --> B
-    C -- Sí --> D[Leer 8 bits de datos]
-    D --> E[Leer paridad y parada]
-    E --> F{¿Paridad impar correcta?}
-    F -- No --> G[PARITY_ERR=1]
-    F -- Sí --> H{¿FIFO llena?}
-    H -- Sí --> I[OVERFLOW=1]
-    H -- No --> J[Guardar scan code, VALID=1]
-    G --> B
+    C -- Sí --> D([Recibimiento de datos])
+    D -- entrar en ciclo --> E[Transporte de la señal y traducción por medio del driver]
+    E -- registro de 8 bits --> F{¿El valor pertenece a la lista relevante?}
+    F -- Sí --> G([Conversión de datos al formato legible por la lógica del sistema])
+    G --> H([Dato retenido, disponible])
+    H --> I([Paso al siguiente loop de lectura de señales])
+    F -- No --> I
     I --> B
-    J --> B
 ```
 
 ## Máquina de estados

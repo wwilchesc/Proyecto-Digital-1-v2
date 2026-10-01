@@ -12,7 +12,7 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
 
 ```mermaid
 flowchart TD
@@ -33,6 +33,6 @@ flowchart TD
 
 ## Máquina de estados
 
-`IDLE`, `CMD`, `ADDR`, `DATA`, `DONE`. Puede reutilizar el maestro SPI del Grupo 2 (misma base de RTL que la SPI-RAM).
+`IDLE`, `CMD`, `ADDR`, `DATA`, `DONE`. Puede reutilizar el maestro SPI del Grupo C (misma base de RTL que la SPI-RAM).
 
 El diagrama ASM detallado se agrega aquí en el checkpoint 2.

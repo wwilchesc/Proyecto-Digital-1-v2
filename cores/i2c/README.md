@@ -4,14 +4,13 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 5 — I2C y puntajes |
-| **Responsable del RTL** | G5-A (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo H — I2C (EEPROM de puntajes) (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x460000 – 0x46FFFF` |
 | **Archivo RTL** | `cores/i2c/rtl/perip_i2c.v` |
 
 ## Función
 
-Guardar y leer los puntajes más altos en una EEPROM I2C para que no se pierdan al apagar la consola.
+Guardar y leer los puntajes más altos (top 5 con nombre) en una EEPROM I2C para que no se pierdan al apagar, y comprobar al encender que los elementos I2C responden.
 
 ## Protocolo
 
@@ -37,7 +36,7 @@ module perip_i2c (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x460000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|

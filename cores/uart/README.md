@@ -4,8 +4,7 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 1 — Integración, SoC y UART |
-| **Responsable del RTL** | G1-B (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo B — UART (diagnóstico) (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x400000 – 0x40FFFF` |
 | **Archivo RTL** | `cores/uart/rtl/perip_uart.v` |
 
@@ -37,7 +36,7 @@ module perip_uart (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x400000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|

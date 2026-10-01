@@ -4,18 +4,17 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 6 — I2S y audio |
-| **Responsable del RTL** | G6-A (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo I — I2S (audio) (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x470000 – 0x47FFFF` |
 | **Archivo RTL** | `cores/i2s/rtl/perip_i2s.v` |
 
 ## Función
 
-Enviar muestras de audio a un DAC I2S para reproducir efectos de sonido y música del juego.
+Reproducir los sonidos del juego (inicio, menú, daño, recompensa) a partir de archivos .WAV, enviándolos a un DAC por I2S.
 
 ## Protocolo
 
-I2S maestro: `BCLK`, `LRCLK` (selección de canal) y `SDATA`, 16 bits por canal, MSB primero, con un ciclo de retardo tras el cambio de LRCLK. DAC de referencia: MAX98357A o PCM5102. Frecuencia de muestreo objetivo: 22.05 kHz o 44.1 kHz.
+I2S maestro: `BCLK`, `LRCLK` (selección de canal) y `SDATA`. Se leen los metadatos del .WAV; si es estéreo se usa un solo canal. Por cada muestra se cambia `LRCLK` y se envían 8 bits al DAC, un bit por pulso de `BCLK`. DAC de referencia: MAX98357A o PCM5102.
 
 **Pines externos:** `i2s_bclk`, `i2s_lrclk`, `i2s_sdata`.
 
@@ -37,28 +36,32 @@ module perip_i2s (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x470000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|
-| `0x00` | `CONTROL` | R/W | Bit 0 `ENABLE`. Bit 1 `MODE`: 0 = FIFO, 1 = generador de tono. |
-| `0x04` | `SAMPLE` | W | Muestra estéreo: bits 31:16 izquierdo, 15:0 derecho. Entra a la FIFO. |
-| `0x08` | `STATUS` | R | Bit 0 `FIFO_FULL`. Bit 1 `FIFO_EMPTY`. Bit 2 `UNDERRUN`. |
-| `0x0C` | `CLK_DIV` | R/W | Divisor para BCLK. |
-| `0x10` | `TONE` | R/W | Período del generador de tono cuadrado (para efectos simples sin cargar la CPU). |
+| `0x00` | `CONTROL` | R/W | Bit 0 `ENABLE`. Bit 1 `PLAY`: inicia la reproducción. |
+| `0x04` | `SAMPLE` | W | Muestra de audio de 8 bits (bits 7:0). Entra a la FIFO. |
+| `0x08` | `STATUS` | R | Bit 0 `FIFO_FULL`. Bit 1 `FIFO_EMPTY`. Bit 2 `FIN`: terminó el archivo. |
+| `0x0C` | `CLK_DIV` | R/W | Divisor para generar BCLK. |
 
 ## Diseño
 
 - Diagramas de bloques y de flujo: [`diagramas/`](diagramas/README.md)
-- Estados previstos: Contador de bits (0–31) que genera BCLK/LRCLK; registro de desplazamiento de 32 bits; FIFO de muestras; generador de tono opcional.
+- Estados previstos: Contador de bits (0–7) que genera BCLK/LRCLK, registro de desplazamiento de 8 bits y FIFO de muestras.
+
+## Tareas iniciales del grupo (I2S_1)
+
+1. Diseñar una solución que implemente el protocolo I2S y reproduzca la información de archivos .WAV.
+2. Encontrar los archivos .WAV que se usarán en el inicio y en el menú del juego.
 
 ## Plan de verificación (checkpoint 3)
 
 Cada prueba del testbench imprime `PASS` o `FAIL` y declara estímulo, resultado esperado y criterio de aprobación.
 
-1. Escribir la muestra 0x8001_7FFE y verificar la serialización en SDATA respecto a LRCLK.
+1. Escribir la muestra 0xA5 y verificar la serialización en SDATA respecto a LRCLK y BCLK.
 2. Verificar la frecuencia de LRCLK con el divisor configurado.
-3. Caso límite: FIFO vacía → salida en 0 y `UNDERRUN=1`; FIFO llena → `FIFO_FULL=1`.
+3. Caso límite: FIFO vacía al terminar el archivo → `FIN=1` y salida en 0.
 
 ## Firmware previsto
 

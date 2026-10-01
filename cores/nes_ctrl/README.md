@@ -4,8 +4,7 @@
 
 | | |
 |---|---|
-| **Equipo responsable** | Grupo 4 — Control NES y pantalla |
-| **Responsable del RTL** | G4-A (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
+| **Equipo responsable** | Grupo G — Control NES (ver [`planificacion/equipos.md`](../../planificacion/equipos.md)) |
 | **Región de memoria** | `0x450000 – 0x45FFFF` |
 | **Archivo RTL** | `cores/nes_ctrl/rtl/perip_nes.v` |
 
@@ -37,26 +36,26 @@ module perip_nes (
 
 ## Registros CSR (preliminar)
 
-Direcciones relativas a `0x450000`. Todos los registros son de 32 bits.
+Direcciones relativas a la base de la región. Todos los registros son de 32 bits.
 
 | Desplazamiento | Nombre | Acceso | Descripción |
 |---|---|---|---|
-| `0x00` | `BUTTONS_P1` | R | Bits 7:0 del jugador 1 (1 = presionado). |
-| `0x04` | `BUTTONS_P2` | R | Bits 7:0 del jugador 2. |
-| `0x08` | `CONTROL` | R/W | Bit 0 `ENABLE`: lectura automática. |
-| `0x0C` | `POLL_DIV` | R/W | Ciclos de reloj entre lecturas (≈ f_clk / 60). |
+| `0x00` | `BUTTONS` | R | Byte de botones ya invertido (1 = presionado): A, B, Select, Start, Arriba, Abajo, Izquierda, Derecha. |
+| `0x04` | `BUTTONS_P2` | R | Byte del segundo puerto (reservado para el modo multijugador). |
+| `0x08` | `STATUS` | R | Bit 0 `DATO_LISTO`: hay un byte nuevo (se limpia al leer `BUTTONS`). |
+| `0x0C` | `CONTROL` | R/W | Bit 0 `ENABLE`: lectura automática cada 16.6 ms (60 Hz). |
 
 ## Diseño
 
 - Diagramas de bloques y de flujo: [`diagramas/`](diagramas/README.md)
-- Estados previstos: `IDLE`, `LATCH`, `READ`, `SHIFT`, `DONE`. Datapath: divisor de tiempo, contador de bits (0–7), dos registros de desplazamiento.
+- Estados previstos: `IDLE`, `LATCH` (12 µs), `READ`, `CLK_HIGH` (6 µs), `CLK_LOW` (6 µs), `STORE`, `WAIT_60HZ`. Datapath: contador de tiempo, contador de bits `i` (0–7), registro `registro_temp` de 8 bits.
 
 ## Plan de verificación (checkpoint 3)
 
 Cada prueba del testbench imprime `PASS` o `FAIL` y declara estímulo, resultado esperado y criterio de aprobación.
 
-1. Modelo del 4021 en el testbench con Start y Derecha presionados → `BUTTONS_P1 = 0x88` (según el orden de bits documentado).
-2. Verificar anchos de `LATCH` y `CLK` en la forma de onda.
+1. Modelo del 4021 en el testbench con Start y Derecha presionados → `BUTTONS` con esos dos bits en 1 y `DATO_LISTO=1`.
+2. Verificar en la forma de onda: LATCH de 12 µs y pulsos de CLOCK de 6 µs en alto y 6 µs en bajo.
 3. Caso límite: sin control conectado (DATA siempre 1 por el pull-up) → `BUTTONS = 0x00`.
 
 ## Firmware previsto

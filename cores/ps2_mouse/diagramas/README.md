@@ -12,21 +12,24 @@ flowchart LR
     REGS --> DOUT[d_out]
 ```
 
-## Diagrama de flujo (preliminar)
+## Diagrama de flujo
+
+> El diagrama de flujo corresponde a la hoja **«F-Mouse»** de [`diagramas/Diagrama_de_Flujo.drawio`](../../../diagramas/Diagrama_de_Flujo.drawio).
 
 ```mermaid
 flowchart TD
-    A[Reset] --> B{¿CONTROL.INIT?}
-    B -- No --> B
-    B -- Sí --> C[Host: inhibir reloj ≥100 µs y enviar 0xF4]
-    C --> D{¿Recibe 0xFA?}
-    D -- No --> E[ERR=1] --> B
-    D -- Sí --> F[READY=1]
-    F --> G[Recibir byte 1: botones y signos]
-    G --> H[Recibir byte 2: ΔX]
-    H --> I[Recibir byte 3: ΔY]
-    I --> J[Actualizar DX, DY, BUTTONS; NEW_PACKET=1]
-    J --> G
+    A([Setup del ratón]) --> B([Establecer conexión: reset])
+    B --> C{¿Autotest del mouse superado?}
+    C -- No --> B
+    C -- Sí --> D[Establecer frecuencia de muestreo]
+    D --> E[Frecuencia input 1] --> F[Frecuencia input 2] --> G[Frecuencia input 3]
+    G --> H[Solicitar ID]
+    H --> I{¿ID recibido de Microsoft?}
+    I -- No --> B
+    I -- Sí --> J[Establecer resolución] --> K[Introducir resolución]
+    K --> L[Establecer escala] --> M[Establecer frec. muestreo] --> N[Introducir frec. muestreo]
+    N --> O[Habilitación]
+    O --> P([LECTURA de paquetes])
 ```
 
 ## Máquina de estados
